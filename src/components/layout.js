@@ -1,4 +1,6 @@
 import React from "react";
+import Header from "./header";
+import Footer from "./footer";
 
 export default class Layout extends React.Component {
   constructor() {
@@ -9,9 +11,15 @@ export default class Layout extends React.Component {
   }
 
   render() {
+    setTimeout(() => {
+      this.setState({title:"Welcome Angelo"});
+    }, 1000);
+
     return (
       <div>
-        TEST
+        {this.state.title}
+        <Header />
+        <Footer />
       </div>
     );
   }
