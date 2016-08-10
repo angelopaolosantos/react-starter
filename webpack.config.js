@@ -8,7 +8,11 @@ module.exports = {
   context: __dirname,
   devtool: debug ? "inline-sourcemap" : null,
   entry: {
-  	app: './src/app.js',
+  	app: [
+    'webpack-dev-server/client?http://127.0.0.1:8080/',
+    'webpack/hot/only-dev-server',
+    './src/app.js'
+    ],
     //Profile: './profile.js'
   },
   output: {
@@ -23,9 +27,9 @@ module.exports = {
       	loader: 'coffee-loader' 
       },
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: ['react-hot','babel-loader'],
         query: {
           presets: ['es2015', 'react', 'stage-0']
         }
@@ -62,7 +66,8 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
     
-    //new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    //new webpack.NoErrorsPlugin()
   	//new webpack.optimize.CommonsChunkPlugin({
     //  name: 'vendor',
     //  minChunks: Infinity,
@@ -73,5 +78,12 @@ module.exports = {
     //__PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false'))
     //})
   ],
+  devServer: {
+    hot: true,
+    proxy: {
+      '*': 'http://127.0.0.1:' + (process.env.PORT || 3000)
+    },
+    host: '127.0.0.1'
+  }
   // watch: true; or type 'webpack --watch' in the terminal
 };
